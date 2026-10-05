@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login System</title>
+</head>
+
+<body>
+
+    <h1>Student Registration and Login</h1>
+
+    <!-- Sign Up -->
+    <h2>Sign Up</h2>
+
+    <form id="signupForm">
+        <input type="text" id="signupName" placeholder="Name" required>
+        <br><br>
+
+        <input type="email" id="signupEmail" placeholder="Email" required>
+        <br><br>
+
+        <input type="password" id="signupPassword" placeholder="Password" required>
+        <br><br>
+
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <p id="signupMessage"></p>
+
+    <hr>
+
+    <!-- Login -->
+    <h2>Login</h2>
+
+    <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <br><br>
+
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <br><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p id="loginMessage"></p>
+
+
+    <script>
+
+        // Sign Up
+        document.getElementById("signupForm").addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            const name = document.getElementById("signupName").value;
+            const email = document.getElementById("signupEmail").value;
+            const password = document.getElementById("signupPassword").value;
+
+            const response = await fetch("/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            document.getElementById("signupMessage").textContent = data.message;
+        });
+
+
+        // Login
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+
+                localStorage.setItem("userName", data.name);
+
+                window.location.href = "dashboard.html";
+
+            } else {
+
+                document.getElementById("loginMessage").textContent = data.message;
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
